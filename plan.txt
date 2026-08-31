@@ -1,0 +1,4 @@
+plan:
+1. make a pixel with looped window frame
+2. drop the sand within gravity and make hard edge on window edges.
+3. make sand particle (basiscally a sand struct that can spawn sand type particles)
