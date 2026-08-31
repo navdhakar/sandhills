@@ -2,8 +2,6 @@ use crate::particle::Particle;
 use crate::spatial_grid::SpatialGrid;
 use crate::vec2::Vec2;
 
-const RESTITUTION: f32 = 0.05;
-const FRICTION: f32 = 0.45;
 const PENETRATION_FRICTION_SCALE: f32 = 40.0;
 
 pub fn resolve_collisions(particles: &mut [Particle], grid: &SpatialGrid) {
@@ -47,12 +45,15 @@ fn resolve_pair(a: &mut Particle, b: &mut Particle) {
     let inv_mass_b = 1.0 / b.mass;
     let total_inv_mass = inv_mass_a + inv_mass_b;
 
+    let restitution = a.material.restitution.max(b.material.restitution);
+    let friction = (a.material.friction * b.material.friction).sqrt();
+
     let relative_vel = b.vel - a.vel;
     let vel_along_normal = relative_vel.dot(normal);
 
     let mut j = 0.0;
     if vel_along_normal < 0.0 {
-        j = -(1.0 + RESTITUTION) * vel_along_normal / total_inv_mass;
+        j = -(1.0 + restitution) * vel_along_normal / total_inv_mass;
         let impulse = normal * j;
         a.vel = a.vel - impulse * inv_mass_a;
         b.vel = b.vel + impulse * inv_mass_b;
@@ -69,7 +70,7 @@ fn resolve_pair(a: &mut Particle, b: &mut Particle) {
         let vel_along_tangent = relative_vel.dot(tangent);
         let jt = -vel_along_tangent / total_inv_mass;
 
-        let max_friction = FRICTION * effective_j;
+        let max_friction = friction * effective_j;
         let jt_clamped = jt.clamp(-max_friction, max_friction);
 
         let friction_impulse = tangent * jt_clamped;

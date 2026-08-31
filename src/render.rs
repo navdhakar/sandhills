@@ -9,7 +9,7 @@ pub fn draw_particle(p: &Particle, width: usize, height: usize, buffer: &mut [u3
     for x in px..px + p.size as usize {
         for y in py..py + p.size as usize {
             if x < width && y < height {
-                buffer[y * width + x] = p.color;
+                buffer[y * width + x] = p.material.color;
             }
         }
     }
