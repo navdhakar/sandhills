@@ -2,23 +2,26 @@ mod particle;
 mod physics;
 mod render;
 mod vec2;
+mod collisions;
 
 use minifb::{Key, Window, WindowOptions};
 use particle::Particle;
 use vec2::Vec2;
+use collisions::{resolve_collision};
 
 const WIDTH: usize = 320;
 const HEIGHT: usize = 340;
 const PARTICLE_SIZE: i32 = 4;
 const PARTICLE_MASS: f32 = 0.04;
+const COLLISION_ITERATIONS: usize = 4;
 
 fn spawn_particles() -> Vec<Particle> {
     let mut particles = Vec::new();
-    let cols = 15;
-    let rows = 10;
+    let cols = 5;
+    let rows = 5;
     let spacing = (PARTICLE_SIZE + 2) as f32;
     let start_x = 40.0;
-    let start_y = 10.0;
+    let start_y = 300.0;
 
     // now we want to loop through each row and columns to set position of particle.
 
@@ -35,6 +38,7 @@ fn spawn_particles() -> Vec<Particle> {
     // retunr particles
     particles
 }
+
 
 fn main() {
     let mut buffer: Vec<u32> = vec![0; WIDTH * HEIGHT];
@@ -53,10 +57,18 @@ fn main() {
         // now we need to simulate physics and render for each particle
         for p in particles.iter_mut(){
         physics::step(p, dt, WIDTH as i32, HEIGHT as i32);
-        render::draw_particle(p, WIDTH, HEIGHT, &mut buffer);
+        }
+        //get the collision data as well before render, and not let two particles collide
+
+
+        for _ in 0..COLLISION_ITERATIONS {
+            resolve_collision(&mut particles); // inject current state of all the particles
+        }
+
+        for p in particles.iter_mut(){
+            render::draw_particle(p, WIDTH, HEIGHT, &mut buffer);
         }
 
         window.update_with_buffer(&buffer, WIDTH, HEIGHT).unwrap();
     }
 }
-// forgot to record, so backtracking the code

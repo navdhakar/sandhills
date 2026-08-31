@@ -1,4 +1,5 @@
 use std::ops::{Add, AddAssign, Mul, Sub};
+use std::fmt;
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Vec2 {
@@ -41,5 +42,19 @@ impl Mul<f32> for Vec2 {
     type Output = Vec2;
     fn mul(self, scalar: f32) -> Vec2 {
         Vec2::new(self.x * scalar, self.y * scalar)
+    }
+}
+
+impl Mul<Vec2> for Vec2 {
+    type Output = Vec2;
+    fn mul(self, other: Vec2) -> Vec2 {
+        Vec2::new(self.x * other.x, self.y * other.y)
+    }
+}
+
+impl fmt::Display for Vec2 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // 3. Use the write! macro to format your output
+        write!(f, " x is {} and y is {}", self.x, self.y)
     }
 }
