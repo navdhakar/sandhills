@@ -11,7 +11,7 @@ pub fn step(p: &mut Particle, dt: f32, width: i32, height: i32) {
 }
 
 fn apply_gravity(p: &mut Particle, dt: f32) {
-    p.vel += GRAVITY * dt;
+    p.vel += GRAVITY * dt; // => v = u + at
 }
 
 fn integrate(p: &mut Particle, dt: f32) {

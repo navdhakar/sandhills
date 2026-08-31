@@ -5,7 +5,7 @@ pub struct Vec2 {
     pub x: f32,
     pub y: f32,
 }
-
+// use this vector code template, since calculating everyting for x, y evertime is not good.
 impl Vec2 {
     pub fn new(x: f32, y: f32) -> Self {
         Self { x, y }
