@@ -15,6 +15,26 @@ impl Vec2 {
     pub fn zero() -> Self {
         Self { x: 0.0, y: 0.0 }
     }
+     pub fn dot(self, other: Vec2) -> f32 {
+        self.x * other.x + self.y * other.y
+    }
+
+    pub fn length(self) -> f32 {
+        self.dot(self).sqrt()
+    }
+
+    pub fn normalized(self) -> Vec2 {
+        let len = self.length();
+        if len > 0.0001 {
+            self * (1.0 / len)
+        } else {
+            Vec2::zero()
+        }
+    }
+
+    pub fn perpendicular(self) -> Vec2 {
+        Vec2::new(-self.y, self.x)
+    }
 }
 
 impl Add for Vec2 {
